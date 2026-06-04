@@ -318,7 +318,7 @@ tr:hover td{background:rgba(59,130,246,.04)}
     </div>
     <div class="fg">
       <label>초기 투자금 (원)</label>
-      <input id="capital" type="text" value="10,000,000" inputmode="numeric" autocomplete="off" oninput="formatCapital(this)" onkeydown="capitalKeydown(event,this)">
+      <input id="capital" type="text" value="3,000,000" inputmode="numeric" autocomplete="off" oninput="formatCapital(this)" onkeydown="capitalKeydown(event,this)">
     </div>
     <div class="fg">
       <label>수수료 (%)</label>
@@ -472,6 +472,7 @@ tr:hover td{background:rgba(59,130,246,.04)}
 const LS_SERVER  = 'stock_bt_server_url';
 const LS_KIS_KEY = 'kis_app_key';
 const LS_KIS_SEC = 'kis_app_secret';
+const LS_KIS_ACC = 'kis_acc_no';
 
 const KR_STOCKS = [
   { code:'005930', name:'삼성전자' },
@@ -524,7 +525,7 @@ let currentMarket = 'kr';
 let maTags = [5, 20];
 let strat  = 'cross';
 let isRunning = false;
-let lastCapital = 10000000;
+let lastCapital = 3000000;
 let pollTimer = null;
 let eqChart = null, dChart = null, simpleChart = null;
 
@@ -572,6 +573,8 @@ function saveKisKeys() {
   const s = document.getElementById('kisAppSecret').value.trim();
   if (k) localStorage.setItem(LS_KIS_KEY, k);
   if (s) localStorage.setItem(LS_KIS_SEC, s);
+  const a = document.getElementById('kisAccNo').value.trim();
+  if (a) localStorage.setItem(LS_KIS_ACC, a);
   const t = document.getElementById('apiToast');
   t.style.display = 'block';
   setTimeout(() => t.style.display = 'none', 2500);
@@ -890,7 +893,7 @@ async function runBacktest(){
 
   const symbol  = document.getElementById('symbol').value.trim().toUpperCase();
   const ivl     = document.getElementById('ivl').value;
-  const capital = parseRawCapital() || 10000000;
+  const capital = parseRawCapital() || 3000000;
   lastCapital = capital;
   const feeRate    = parseFloat(document.getElementById('fee').value) || 0.015;
   const slippage   = parseFloat(document.getElementById('slippage').value) || 0.05;
@@ -972,7 +975,7 @@ function onJobError(msg){
 // 결과 렌더링
 // ══════════════════════════════════════════════════════
 function renderResults(trades, equity, stats, finalBalance, candleCount, capital){
-  capital = capital || lastCapital || 10000000;
+  capital = capital || 3000000;
   const lastTrade = trades[trades.length-1];
   const realFinalBalance = (lastTrade&&!isNaN(lastTrade.balance)) ? lastTrade.balance : finalBalance;
 
